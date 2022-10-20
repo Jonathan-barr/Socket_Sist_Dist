@@ -22,4 +22,4 @@ with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as s: #STREAM TCP / DGRAM 
                 # SI NO HAY
                 print("No hay datos")
                 break
-            conn.sendall(data)
+            conn.sendall(data) 
