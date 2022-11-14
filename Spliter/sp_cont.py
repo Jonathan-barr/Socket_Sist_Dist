@@ -5,13 +5,13 @@ Created on Thu Nov 10 14:34:44 2022
 
 @author: jbarrionuevo
 """    
-import math
 import numpy as np
 import re  ## elimina los caracteres especiales
-import csv  ## generar los archivos y leerlos
 import nltk  ## Natural Languaje Toolkit
 from nltk.corpus import stopwords  ## carga las stopwords
 import time
+
+nltk.download('stopwords')
 
 # Eliminación de Stopwords
 ne = stopwords.words('english')
@@ -23,20 +23,10 @@ users = 2
 
 ##Open and split into lines a txt file
 def os_file (file): 
-    with open(file,'r') as data_file:
-        for line in data_file:
-            data = line.split()
-            lines.append(data)
+    file_obj = open(file, "r")
+    file_data = file_obj.read()
+    lines = file_data.splitlines()
     return lines
-
-## Open a file
-
-#def o_file (file):
-#    with open(file,'r') as data_file:
-#        data1 = data_file
-#    return data1
-        
-      
 
     
 # function to split the file into the number of the parameter users
@@ -60,26 +50,54 @@ def stopWords(doc):
     return docr
 
 ## Funcion para Limpieza de Datos
-
 def NLP(filas):
-    for j in range (len(filas)):
-     for i in range(len(filas[j])):
-        filas[j][i] = (re.sub('[^A-Za-z0-9]+', ' ', filas[j][i])).lower().split()
-    return filas
+    for i in range(len(filas)):
+      filas[i] = (re.sub('[^A-Za-z0-9]+', ' ', filas[i])).lower().split()
+      res = NEL(filas)
+    return [stopWords(i) for i in res]
 
-os_file(file)   
-split_wr(lines)
-
-archivo1 = os_file(file1)
-
-test = NLP(archivo1)
-test2 = stopWords(test)
+## Funcion para eliminar elementos vacios de la lista
+def NEL(filas):
+    res = [ele for ele in filas if ele != []]
+    return res
 
 
+## Funcion para contar el número de palabras 
+    
+def con_w (filas):
+    n_words = 0
+    for i in range (len(filas)):
+        n_words = len(filas[i]) + n_words
+        
+    print('El número total de palabras es: ', n_words)
+    return n_words
+
+## medir tiempo de ejecucion
+def mide_tiempo(funcion):
+    def funcion_medida(*args, **kwargs):
+        inicio = time.time()
+        c = funcion(*args, **kwargs)
+        print('El tiempo de ejecución es de: ', (time.time() - inicio), ' segundos')
+        return c
+
+    return funcion_medida
 
 
+@mide_tiempo 
+def Ej_solo():
+    
+    print('Bienvenido al Contador de Palabras')
+    ## abrir el archivo    
+    original = os_file(file)
+    ## Separar en Líneas y crear archivos individuales
+    split_wr(original)
+    ## limpieza para obtener únicamente las palabras (inglés)
+    con_w(NEL(NLP(original)))
+    ##obtener el Num de palabras en el texto
+  
+Ej_solo()
 
 
+    
 
-
-
+        
