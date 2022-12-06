@@ -1,25 +1,23 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Nov 10 14:34:44 2022
-
-@author: jbarrionuevo
-"""    
-import numpy as np
-import re  ## elimina los caracteres especiales
-import nltk  ## Natural Languaje Toolkit
-from nltk.corpus import stopwords  ## carga las stopwords
+import re  # # elimina los caracteres especiales
 import time
+from socket import error, socket
+
+import nltk  # # Natural Languaje Toolkit
+from nltk.corpus import stopwords  # # carga las stopwords
 
 nltk.download('stopwords')
 
 # Eliminación de Stopwords
 ne = stopwords.words('english')
-lines = []
-file = "alice.txt"
-file1 = "parte1.txt"
-file2 = "parte2.txt"
-users = 2
+
+HOST = "127.0.0.3"
+PORT = 65002
+
+try:
+    raw_input
+except NameError:
+    raw_input = input
+
 
 ##Open and split into lines a txt file
 def os_file (file): 
@@ -27,19 +25,6 @@ def os_file (file):
     file_data = file_obj.read()
     lines = file_data.splitlines()
     return lines
-
-    
-# function to split the file into the number of the parameter users
-def split_wr (lines):   
-    sub_lists = np.array_split(lines, users)
-    count=0
-    
-    for i in sub_lists:
-        with open(f"parte{count+1}.txt", 'w') as fp:
-            for item in sub_lists[count]:
-                fp.write("%s\n" % item)
-            print('Done File ', count)
-            count+=1
 
 ## Function to delete stopwords
 def stopWords(doc):
@@ -84,20 +69,46 @@ def mide_tiempo(funcion):
 
 
 @mide_tiempo 
-def Ej_solo():
+def Ej_solo(file):
     
     print('Bienvenido al Contador de Palabras')
     ## abrir el archivo    
     original = os_file(file)
-    ## Separar en Líneas y crear archivos individuales
-    split_wr(original)
     ## limpieza para obtener únicamente las palabras (inglés)
     con_w(NEL(NLP(original)))
     ##obtener el Num de palabras en el texto
   
-Ej_solo()
 
-
+def main():
+    s = socket()
+    s.connect((HOST,PORT))
     
+    input_data = s.recv(1024)
+    if input_data:
+        print(input_data.decode("utf-8") if isinstance(input_data, bytes) else input_data)
+    
+    output_data = raw_input("> ")
+    if output_data:
+        try:
+            s.send(output_data)
+        except TypeError:
+            s.send(bytes(output_data, "utf-8"))
+  
+    name = int(input_data.decode("utf-8")[0])+1   
+    print("Holaaaaa "+str(name))
+    file = open(f"parte{str(name)}.txt", 'wb')
 
+    # Keep receiving data from the server
+    line = s.recv(1024)
+
+    while(line):
+        file.write(line)
+        line = s.recv(1024)
+    
+    s.close()
         
+    Ej_solo(f"parte{str(name)}.txt")
+        
+
+if __name__ == "__main__":
+    main()
