@@ -1,0 +1,65 @@
+sudo docker pull ubuntu:18.04 -- obtener la imagen para docker
+sudo docker images -- ver que imagenes disponemos
+sudo docker run -- tiene varias opciones
+-- la primera opcion nos abre una terminal del contenedor 
+sudo docker run -it ubuntu:18.04 bash -- poner tambien imagen y para que abra el terminal con bash
+y ya tengo el contedor te sale
+18.04 bash
+root@b0c678151c3d
+
+******
+
+sudo docker ps  -- permite ver los contenedores que estan ejecutandose
+
+para llamar la imagen y crear el contenedor de una
+
+sudo docker run -it centos bash /// al no ponerle :xx.xx (osea la version se descarga la ultima)
+
+**Para instalar mongo
+sudo docker run -it mongo bash -- 
+-- buscamos la imagen de mongo en dockerhub
+
+** Para instalar redis 
+sudo docker run -it redis bash // redis es una bdd para hacer cache
+
+*** MODO INTERACTIVO // no es persistente al darle exit se muere de a deveras
+
+
+ver todos los contentedores existentes
+
+sudo docker ps -a
+
+*************************
+sudo docker start "ID"  -- volver a levantar un docker
+sudo docker stop "ID" -- apagar el docker
+
+*** CONECTARME AL CONTENEDOR **
+sudo docker exec -it "ID" bash
+** el contenedor tiene salida a internet y se le puede instalar
+** cositas
+
+uname -a  te dice la version detallada
+uname -r  tedice solo la revision
+
+*** si estamos en las computadoras de la U tenemos que poner un comando adicional para hacer la configuraciòn del proxy
+** configurar el proxy con el siguiente comando
+
+echo 'Acquire::http::proxy "http://172.17.33.10:3128/";'>/etc/apt/apt.conf.d/40proxy
+** SOLO EN LAS COMPUTADORAS DE LA U
+
+LEVANTAR UN CONTENEDOR EN BG
+
+sudo docker run -d "ID"
+
+
+BORRAR CONTENEDOR Y BORRAR IMAGEN
+1. detener el contenedor 
+2. borrar el contenedor
+sudo docker rm "ID" "ID"
+3. borrar la imagen
+sudo docker image rm "ID"
+
+
+
+
+
